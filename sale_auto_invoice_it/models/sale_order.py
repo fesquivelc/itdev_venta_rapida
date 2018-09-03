@@ -23,7 +23,7 @@ class SaleOrderInvoice(models.Model):
 
             if warehouse_id.account_id:
                 invoice.write({
-                    'account_id': warehouse_id.account_id,
+                    'account_id': warehouse_id.account_id.id,
                 })
 
             invoice.action_invoice_open()
