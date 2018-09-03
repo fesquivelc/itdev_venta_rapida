@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <record id="sale_warehouse_view" model="ir.ui.view">
+            <field name="name">sale.warehouse.view</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="account_id"/>
+                    <field name="tipo_doc_id"/>
+                    <field name="invoice_serie_id"
+                           attrs="{'invisible': [('tipo_doc_id','=',False)],
+                                    'required': [('tipo_doc_id','=',True)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

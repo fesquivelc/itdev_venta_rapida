@@ -1,0 +1,7 @@
+<odoo>
+    <data noupdate="1">
+        <record id="sale_parameters_values" model="sale.parameters.it">
+            <field name="name">Parámetros de venta rápida</field>
+        </record>
+    </data>
+</odoo>

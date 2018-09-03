@@ -1,0 +1,69 @@
+<odoo>
+    <data>
+        <record id="sale_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[1]" position="before">
+                    <page name="busqueda" string="Búsqueda"
+                          attrs="{'invisible': [('state', 'in', ['sale','done','cancel'])]}">
+                        <group>
+                            <table style='width:100%;' border='0'>
+                                <tr>
+                                    <th style='width:10%; font-weight:bold'>
+                                        <label for="search_completa"/>
+                                    </th>
+                                    <th style='width:10%; font-weight:bold'>
+                                        <label for="search_codigo"/>
+                                    </th>
+                                    <th style='width:30%; font-weight:bold'>
+                                        <label for="search_box"/>
+                                    </th>
+                                    <th style='width:10%; font-weight:bold'>
+                                        <label for="search_categ_id"/>
+                                    </th>
+                                    <th style='width:30%; font-weight:bold'>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <field name="search_completa" nolabel="1" />
+                                    </td>
+                                    <td>
+                                        <field name="search_codigo" nolabel="1" default_focus="1" placeholder="Codigo" />
+                                    </td>
+                                    <td>
+                                        <field name="search_box" nolabel="1" default_focus="1" placeholder="Nombre" />
+                                    </td>
+                                    <td>
+                                        <field name="search_categ_id" options="{'no_create_edit': True}"/>
+                                    </td>
+                                    <td>
+                                        <button name="buscar" string="Buscar" type="object" class="btn btn-primary btn-xs"/>
+                                        <button name="agregar_lineas_compra" string="Agregar" class="btn btn-success btn-xs" type="object"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </group>
+                        <field name="search_line_ids" context="{'default_pricelist_id': pricelist_id}">
+                            <tree string="Productos buscados" create="false" editable="1">
+                                <field name="order_id" invisible="1"/>
+                                <field name="product_id" readonly="1"/>
+                                <field name="product_code" readonly="1"/>
+                                <field name="uom_id" readonly="1"/>
+                                <field name="pricelist_id" readonly="1"/>
+                                <field name="pricelist_currency" readonly="1"/>
+                                <field name="product_min_qty" readonly="1"/>
+                                <field name="price_unit" readonly="1"/>
+                                <field name="product_hand_qty"/>
+                                <field name="product_qty"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

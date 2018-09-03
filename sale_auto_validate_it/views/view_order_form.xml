@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_order_auto_invoice" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <button name="print_quotation" position="after">
+                    <button name="auto_validate" states="sent" string="Validar y facturar" class="btn-primary o_sale_confirm" type="object" />
+                    <button name="auto_validate" states="draft" string="Validar y facturar" class="o_sale_confirm" type="object" />
+                </button>
+            </field>
+        </record>
+    </data>
+</odoo>

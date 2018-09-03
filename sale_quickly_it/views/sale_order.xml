@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <record id="sale_order_cashbox" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="priority">17</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="it_type_document" required="1"/>
+                    <field name="it_invoice_serie" domain="[('type_document_id','=',it_type_document)]" required="1"/>
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="account_journal" />
+                    <field name="einvoice_means_payment" />
+                </field>
+                <field name="warehouse_id" position="replace">
+                </field>
+                <field name="payment_term_id" position="after">
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

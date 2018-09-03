@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!--<template id="hello">-->
+            <!--<ul>-->
+                <!--<li t-foreach="name" t-as="letter">-->
+                    <!--<t t-esc="letter_index"/>:-->
+                    <!--<t t-esc="letter"/>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</template>-->
+
+        <record id="sale_parameters_form" model="ir.ui.view">
+            <field name="name">sale.parameters.form</field>
+            <field name="model">sale.parameters.it</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Parámetros de venta" create="false" delete="false">
+                    <notebook>
+                        <page string="Venta rápida">
+                            <group name="venta_rapida">
+                                <field name="payment_term_id"/>
+                                <field name="type_document_id"/>
+                                <field name="invoice_serie_id"
+                                       attrs="{'invisible': [('type_document_id','=',False)]}"
+                                       domain="[('type_document_id','=',type_document_id)]"/>
+                                <field name="account_journal_id"/>
+                                <field name="means_payment_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="sale_parameters_tree" model="ir.ui.view">
+            <field name="name">sale.parameters.tree</field>
+            <field name="model">sale.parameters.it</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Main Parameter" create="false" delete="false">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sale_parameters" model="ir.actions.act_window">
+            <field name="name">Parametros</field>
+            <field name="res_model">sale.parameters.it</field>
+            <field name="view_id" ref="sale_parameters_tree"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="sequence" eval="1"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!-- <field name="search_view_id" ref="account_move_line_book_search"/> -->
+        </record>
+
+        <menuitem
+                action="action_sale_parameters"
+                id="menu_sale_parameters"
+                parent="sales_team.menu_sale_config" sequence="100"/>
+
+    </data>
+</odoo>
