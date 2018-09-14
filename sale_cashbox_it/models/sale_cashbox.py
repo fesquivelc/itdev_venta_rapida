@@ -24,6 +24,7 @@ class SaleCashbox(models.Model):
     fecha_apertura = fields.Datetime(u'Fecha de apertura')
     fecha_cierre = fields.Datetime(u'Fecha de cierre')
     sale_order_count = fields.Integer(compute='_count_sale_order')
+    warehouse_id = fields.Many2one('stock.warehouse', string=u'Almacén', required=True)
 
     def _count_sale_order(self):
         conteo = self.env['sale.order'].search_count(
@@ -48,7 +49,8 @@ class SaleCashbox(models.Model):
     def abrir_caja(self):
         self.ensure_one()
         # Buscamos una caja que este abierta
-        cajas_abiertas = self.env['sale.cashbox.it'].search_count([('state', '=', 'abierto')])
+        cajas_abiertas = self.env['sale.cashbox.it'].search_count(
+            [('state', '=', 'abierto'), ('warehouse_id', '=', self.warehouse_id.id)])
 
         if cajas_abiertas:
             raise ValidationError(_('¡Ya existe una arqueo de caja abierto actualmente!'))

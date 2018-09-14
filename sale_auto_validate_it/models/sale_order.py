@@ -14,7 +14,14 @@ class SaleOrderInvoice(models.Model):
         if picking_id.exists():
             for operation in picking_id.pack_operation_product_ids:
                 operation.write({'qty_done': operation.product_qty})
-            picking_id.do_new_transfer()
+            # picking_id.do_new_transfer()
         else:
             raise ValidationError(_(u'No hay albarán de salida para la venta'))
         self.auto_invoice()
+
+    @api.multi
+    def picking_validate(self):
+        for order in self:
+            picking_id = self.env['stock.picking'].search([('origin', '=', self.name)], limit=1)
+            if picking_id.exists():
+                picking_id.do_new_transfer()

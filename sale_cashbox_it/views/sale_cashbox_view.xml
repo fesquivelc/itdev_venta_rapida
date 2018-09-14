@@ -59,6 +59,9 @@
                         </div>
                         <group>
                             <group>
+                                <field name="warehouse_id" />
+                            </group>
+                            <group>
                                 <field name="fecha_apertura" readonly="1"/>
                                 <field name="fecha_cierre" readonly="1"/>
                             </group>

@@ -23,3 +23,10 @@ class SaleOrder(models.Model):
     def check_cashbox_id(self):
         if not self.cashbox_id:
             raise ValidationError(_('¡Debe existir un arqueo de caja!'))
+
+    @api.onchange('cashbox_id')
+    def select_cashbox_id(self):
+        self.ensure_one()
+        self.update({
+            'warehouse_id': self.cashbox_id.id
+        })

@@ -152,10 +152,13 @@ class SaleOrderSearchLine(models.Model):
         self.price_unit = price_unit
         self.product_min_qty = product_min_qty
 
+    @api.depends('order_id.warehouse_id')
     def _compute_cantidad_mano(self):
         for line in self:
             cantidad = False
-            res = self.env['detalle.simple.fisico.total.d'].search([('producto', '=', line.product_id.id)])
+            location_id = line.order_id.warehouse_id.lot_stock_id
+            res = self.env['detalle.simple.fisico.total.d'].search(
+                [('producto', '=', line.product_id.id), ('almacen', '=', location_id.id)])
             if res.exists():
                 cantidad = sum(res.mapped('saldo'))
             line.product_hand_qty = cantidad

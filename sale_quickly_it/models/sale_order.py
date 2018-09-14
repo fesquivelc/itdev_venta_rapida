@@ -46,34 +46,49 @@ class SaleOrder(models.Model):
     it_invoice_serie = fields.Many2one('it.invoice.serie', u'Serie',
                                        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     sequence_id = fields.Many2one('ir.sequence', related='it_invoice_serie.sequence_id')
-    invoice_number = fields.Char(u'Número')
+    invoice_number = fields.Char(u'Número', store=True, readonly=False, required=True)
     account_journal = fields.Many2one('account.journal', u'Diario de pago', default=_get_account_journal,
                                       states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     einvoice_means_payment = fields.Many2one('einvoice.means.payment', u'Medio de pago',
                                              default=_get_einvoice_means_payment,
                                              states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
 
-    @api.onchange('warehouse_id')
+    @api.onchange('warehouse_id', 'it_invoice_serie')
     def onchange_warehouse_id(self):
-        warehouse_id = self.warehouse_id
-        tipo_doc_id = warehouse_id.tipo_doc_id
-        serie_id = warehouse_id.invoice_serie_id
-        if not serie_id:
-            tipo_doc_id = self._get_tipo_documento()
-            serie_id = self._get_serie()
-        self.it_type_document = tipo_doc_id
-        self.it_invoice_serie = serie_id
-        self.obtener_numero()
+        for order in self:
+            warehouse_id = order.warehouse_id
+            tipo_doc_id = warehouse_id.tipo_doc_id
+            serie_id = warehouse_id.invoice_serie_id
+            if not serie_id:
+                tipo_doc_id = order._get_tipo_documento()
+                serie_id = order._get_serie()
+            invoice_number = self.obtener_numero(serie_id)
+            order.update({
+                'it_type_document': tipo_doc_id,
+                'it_invoice_serie': serie_id,
+                'invoice_number': invoice_number
+            })
 
+            # order.it_type_document = tipo_doc_id
+            # order.it_invoice_serie = serie_id
+            # order.invoice_number = self.obtener_numero(serie_id)
 
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals):
+        if not vals.get('invoice_number', False):
+            serie_id = self.env['it.invoice.serie'].browse(vals.get('it_invoice_serie'))
+            vals.update({'invoice_number': self.obtener_numero(serie_id)})
+        return super(SaleOrder, self).create(vals)
 
-    @api.onchange('it_invoice_serie')
-    def obtener_numero(self):
-        padding = self.sequence_id.padding
-        prefix = self.sequence_id.prefix
-        numero = self.sequence_id.number_next
+    def obtener_numero(self, serie_id):
+
+        sequence_id = serie_id.sequence_id
+        padding = sequence_id.padding
+        prefix = sequence_id.prefix
+        numero = sequence_id.number_next
         siguiente = '%s%0{}d'.format(padding) % (prefix, numero)
-        self.invoice_number = siguiente
+        return siguiente
 
     @api.onchange('doc_search')
     def onchange_doc_search(self):
