@@ -28,5 +28,5 @@ class SaleOrder(models.Model):
     def select_cashbox_id(self):
         self.ensure_one()
         self.update({
-            'warehouse_id': self.cashbox_id.id
+            'warehouse_id': self.cashbox_id.warehouse_id.id
         })
