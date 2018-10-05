@@ -21,3 +21,4 @@ class SaleConfiguration(models.Model):
     invoice_serie_id = fields.Many2one('it.invoice.serie', u'Serie por defecto')
     account_journal_id = fields.Many2one('account.journal', u'Diario de pago x defecto')
     means_payment_id = fields.Many2one('einvoice.means.payment', u'Diario de pago x defecto')
+    force_assign = fields.Boolean(u'Forzar asignación en el albarán', default=False)

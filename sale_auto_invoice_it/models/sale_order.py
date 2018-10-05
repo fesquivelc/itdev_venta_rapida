@@ -5,7 +5,7 @@ class SaleOrderInvoice(models.Model):
     _inherit = 'sale.order'
 
     @api.multi
-    def auto_invoice(self):
+    def auto_invoice(self, picking_ids=None):
         for sale in self:
             active_id = sale.id
 
@@ -29,6 +29,12 @@ class SaleOrderInvoice(models.Model):
                 invoice.write({
                     'account_id': warehouse_id.account_id.id,
                 })
+
+            if picking_ids:
+                for picking_id in picking_ids:
+                    picking_id.write({
+                        'invoice_id': invoice.id
+                    })
 
             # invoice.action_invoice_open()
             # reference = invoice.reference
